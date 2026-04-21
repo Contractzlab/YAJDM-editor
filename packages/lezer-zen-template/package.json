@@ -28,6 +28,7 @@
   },
   "scripts": {
     "build": "lezer-generator src/zen.grammar -o src/parser && rollup -c",
+    "build:watch": "rollup -c --watch",
     "build-debug": "lezer-generator src/zen.grammar --names -o src/parser && rollup -c",
     "watch": "nodemon --watch 'src/zen.grammar' --exec 'pnpm run build'",
     "prepublishOnly": "pnpm run build"
