@@ -6,7 +6,7 @@ import { match } from 'ts-pattern';
 
 import { useDecisionGraphState } from '../context/dg-store.context';
 import { DecisionNode } from '../nodes/decision-node';
-import { NodeKind, type NodeSpecification } from '../nodes/specifications/specification-types';
+import { INPUT_FAMILY, NodeKind, type NodeSpecification } from '../nodes/specifications/specification-types';
 import { nodeSpecification } from '../nodes/specifications/specifications';
 
 export type GraphComponentsProps = {
@@ -43,6 +43,25 @@ export const GraphComponents: React.FC<GraphComponentsProps> = React.memo(({ inp
       event.dataTransfer.setData('customNodeComponent', component);
     }
   }, []);
+
+  const onDragStartInputPreset = useCallback((event: React.DragEvent, node: (typeof customNodes)[number]) => {
+    const target = event.target as HTMLDivElement;
+    if (!target) return;
+    const { offsetX, offsetY } = event.nativeEvent;
+    const { height, width } = target.getBoundingClientRect();
+    const positionData: XYPosition = { x: offsetX / width, y: offsetY / height };
+    event.dataTransfer.effectAllowed = 'move';
+    event.dataTransfer.setData('nodeData', JSON.stringify({
+      id: crypto.randomUUID(),
+      type: 'inputNode',
+      name: node.displayName,
+      content: {
+        schema: (node.generateNode({ index: 1 }) as any).config?.schema ?? '',
+        _kind: node.kind,
+      },
+    }));
+    event.dataTransfer.setData('relativePosition', JSON.stringify(positionData));
+  }, [customNodes]);
 
   const innerGroups = useMemo<Record<string, NodeSpecification[]>>(() => {
     const initialGroups: Record<string, NodeSpecification[]> = {
@@ -113,22 +132,25 @@ export const GraphComponents: React.FC<GraphComponentsProps> = React.memo(({ inp
               () =>
                 groups['core']?.length > 0 && (
                   <React.Fragment key={group}>
-                    {(groups['core'] || []).map((node) => (
-                      <React.Fragment key={'kind' in node ? (node.kind as string) : node.type}>
-                        <DragDecisionNode
-                          collapsed={collapsed}
-                          disabled={match(node.type)
-                            .with(NodeKind.Input, () => disabled || inputDisabled)
-                            .otherwise(() => disabled)}
-                          specification={node}
-                          onDragStart={(event) =>
-                            nodeSpecification[node.type as NodeKind] !== undefined
-                              ? onDragStart(event, node.type)
-                              : onDragStart(event, 'customNode', 'kind' in node ? (node.kind as string) : '')
-                          }
-                        />
-                      </React.Fragment>
-                    ))}
+                    {(groups['core'] || []).map((node) => {
+                      const isInputPreset = 'isInputNode' in node && (node as any).isInputNode;
+                      return (
+                        <React.Fragment key={'kind' in node ? (node.kind as string) : node.type}>
+                          <DragDecisionNode
+                            collapsed={collapsed}
+                            disabled={INPUT_FAMILY.has(node.type) || isInputPreset ? (disabled || inputDisabled) : disabled}
+                            specification={node}
+                            onDragStart={(event) =>
+                              isInputPreset
+                                ? onDragStartInputPreset(event, node as any)
+                                : nodeSpecification[node.type as NodeKind] !== undefined
+                                  ? onDragStart(event, node.type)
+                                  : onDragStart(event, 'customNode', 'kind' in node ? (node.kind as string) : '')
+                            }
+                          />
+                        </React.Fragment>
+                      );
+                    })}
                   </React.Fragment>
                 ),
             )
@@ -136,19 +158,24 @@ export const GraphComponents: React.FC<GraphComponentsProps> = React.memo(({ inp
               (group) =>
                 groups[group]?.length > 0 && (
                   <React.Fragment key={group}>
-                    {(groups?.[group] || []).map((customNode) => (
-                      <DragDecisionNode
-                        collapsed={collapsed}
-                        key={'kind' in customNode ? (customNode.kind as string) : customNode.type}
-                        disabled={disabled}
-                        specification={customNode}
-                        onDragStart={(event) =>
-                          group === 'extended'
-                            ? onDragStart(event, customNode.type)
-                            : onDragStart(event, 'customNode', 'kind' in customNode ? (customNode.kind as string) : '')
-                        }
-                      />
-                    ))}
+                    {(groups?.[group] || []).map((customNode) => {
+                      const isInputPreset = 'isInputNode' in customNode && (customNode as any).isInputNode;
+                      return (
+                        <DragDecisionNode
+                          collapsed={collapsed}
+                          key={'kind' in customNode ? (customNode.kind as string) : customNode.type}
+                          disabled={isInputPreset ? (disabled || inputDisabled) : disabled}
+                          specification={customNode}
+                          onDragStart={(event) =>
+                            isInputPreset
+                              ? onDragStartInputPreset(event, customNode as any)
+                              : group === 'extended'
+                                ? onDragStart(event, customNode.type)
+                                : onDragStart(event, 'customNode', 'kind' in customNode ? (customNode.kind as string) : '')
+                          }
+                        />
+                      );
+                    })}
                   </React.Fragment>
                 ),
             );

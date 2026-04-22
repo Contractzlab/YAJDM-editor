@@ -27,6 +27,7 @@ type GenerateNodeParams = {
 
 export type CustomNodeSpecification<Data extends object, Component extends string> = {
   kind: Component;
+  isInputNode?: boolean;
   color?: string;
   icon?: React.ReactNode;
   displayName: string;

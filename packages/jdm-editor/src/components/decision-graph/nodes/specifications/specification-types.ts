@@ -15,6 +15,8 @@ export enum NodeKind {
   Switch = 'switchNode',
 }
 
+export const INPUT_FAMILY = new Set<string>([NodeKind.Input]);
+
 export type MinimalNodeProps = Pick<NodeProps, 'id' | 'data' | 'selected'>;
 export type MinimalNodeSpecification = Pick<
   NodeSpecification,
@@ -33,6 +35,7 @@ export type InferTypeData<T> = {
 export type NodeSpecification<T = any> = {
   icon?: React.ReactNode;
   type: string;
+  targetType?: string;
   color?: DecisionNodeProps['color'];
   group?: string;
   displayName: string | React.ReactNode;

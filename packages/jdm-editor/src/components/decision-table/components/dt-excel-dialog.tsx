@@ -495,7 +495,7 @@ export const DtExcelDialog: React.FC<DtExcelDialogProps> = ({ excelData, handleS
       okButtonProps={{ disabled: isOkDisabled }}
       onOk={onOk}
       onCancel={handleCancel}
-      destroyOnClose
+      destroyOnHidden
       width={900}
       getContainer={getContainer}
     >

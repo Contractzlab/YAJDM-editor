@@ -7,7 +7,7 @@ import React, { type MutableRefObject, createRef, useMemo } from 'react';
 import type { EdgeChange, NodeChange, ReactFlowInstance, useEdgesState, useNodesState } from 'reactflow';
 import { match } from 'ts-pattern';
 import type { StoreApi, UseBoundStore } from 'zustand';
-import { create } from 'zustand';
+import { createWithEqualityFn as create } from 'zustand/traditional';
 
 import type { DictionaryMap } from '../../../theme';
 import type { CodeEditorProps } from '../../code-editor';
@@ -17,7 +17,7 @@ import { privateSymbol } from '../dg-types';
 import { mapToGraphEdge, mapToGraphEdges, mapToGraphNode, mapToGraphNodes } from '../dg-util';
 import type { useGraphClipboard } from '../hooks/use-graph-clipboard';
 import type { CustomNodeSpecification } from '../nodes/custom-node';
-import { NodeKind, type NodeSpecification } from '../nodes/specifications/specification-types';
+import { INPUT_FAMILY, NodeKind, type NodeSpecification } from '../nodes/specifications/specification-types';
 import type { Simulation } from '../simulator/simulation.types';
 
 export type PanelType = {
@@ -285,9 +285,33 @@ export const DecisionGraphProvider: React.FC<React.PropsWithChildren<DecisionGra
         const { nodesState } = referenceStore.getState();
         const { decisionGraph } = stateStore.getState();
 
-        const hasInput = nodesState.current[0]?.some((n) => n.type === NodeKind.Input);
+        const hasInput = nodesState.current[0]?.some((n) => INPUT_FAMILY.has(n.type));
+        const addingInput = nodes.some((n) => INPUT_FAMILY.has(n.type));
+
+        if (hasInput && addingInput) {
+          nodesState.current[1]?.((n) =>
+            mapToGraphNodes(nodes).concat(n.filter((node) => !INPUT_FAMILY.has(node.type))),
+          );
+          const newDecisionGraph = produce(decisionGraph, (draft) => {
+            draft.nodes = nodes.concat((draft.nodes || []).filter((n) => !INPUT_FAMILY.has(n.type)));
+          });
+          stateStore.setState({ decisionGraph: newDecisionGraph });
+          listenerStore.getState().onChange?.(newDecisionGraph);
+          return;
+        }
+
         if (hasInput) {
-          nodes = nodes.filter((n) => n.type !== NodeKind.Input);
+          nodes = nodes.filter((n) => !INPUT_FAMILY.has(n.type));
+        }
+
+        if (addingInput) {
+          nodesState.current[1]?.((n) => mapToGraphNodes(nodes).concat(n));
+          const newDecisionGraph = produce(decisionGraph, (draft) => {
+            draft.nodes = nodes.concat(draft.nodes || []);
+          });
+          stateStore.setState({ decisionGraph: newDecisionGraph });
+          listenerStore.getState().onChange?.(newDecisionGraph);
+          return;
         }
 
         nodesState.current[1]?.((n) => n.concat(mapToGraphNodes(nodes)));
@@ -304,9 +328,9 @@ export const DecisionGraphProvider: React.FC<React.PropsWithChildren<DecisionGra
 
         let nodes = (decisionGraph?.nodes || []).filter((n) => ids.includes(n.id));
 
-        const hasInput = nodesState.current[0]?.some((n) => n.type === NodeKind.Input);
+        const hasInput = nodesState.current[0]?.some((n) => INPUT_FAMILY.has(n.type));
         if (hasInput) {
-          nodes = nodes.filter((n) => n.type !== NodeKind.Input);
+          nodes = nodes.filter((n) => !INPUT_FAMILY.has(n.type));
         }
 
         if (nodes.length === 0) {

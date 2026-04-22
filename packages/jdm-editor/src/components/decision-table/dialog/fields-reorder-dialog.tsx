@@ -118,7 +118,7 @@ export const FieldsReorder: React.FC<FieldsReorderProps> = (props) => {
       open={isOpen}
       onCancel={onDismiss}
       width={360}
-      destroyOnClose
+      destroyOnHidden
       bodyStyle={{ paddingTop: 17 }}
       okText='Update'
       okButtonProps={{

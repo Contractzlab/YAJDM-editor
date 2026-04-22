@@ -190,7 +190,7 @@ export const GraphExcelDialog: React.FC<GraphExcelDialogProps> = ({ excelData, h
       centered
       open={!!excelData}
       onCancel={handleCancel}
-      destroyOnClose={true}
+      destroyOnHidden={true}
       width={1024}
       footer={[
         <Button key='cancel' onClick={handleCancel}>

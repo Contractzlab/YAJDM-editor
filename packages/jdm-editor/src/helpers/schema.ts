@@ -75,6 +75,7 @@ export const inputNodeSchema = z
           .nullish()
           .transform((val) => val ?? ''),
       })
+      .passthrough()
       .default({
         schema: '',
       }),

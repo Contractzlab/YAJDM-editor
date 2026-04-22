@@ -34,7 +34,7 @@ import { useGraphClipboard } from '../hooks/use-graph-clipboard';
 import type { CustomNodeSpecification } from '../nodes/custom-node';
 import { GraphNode } from '../nodes/graph-node';
 import type { MinimalNodeProps } from '../nodes/specifications/specification-types';
-import { NodeKind } from '../nodes/specifications/specification-types';
+import { INPUT_FAMILY, NodeKind } from '../nodes/specifications/specification-types';
 import { nodeSpecification } from '../nodes/specifications/specifications';
 import { GraphComponents } from './graph-components';
 
@@ -69,6 +69,41 @@ const edgeTypes = {
   edge: React.memo(edgeFunction(null)),
 };
 
+const CustomNodeRenderer = React.memo(
+  (props: MinimalNodeProps) => {
+    const customNodes = useDecisionGraphState((s) => s.customNodes);
+    const node = customNodes.find((n) => n.kind === props?.data?.kind) as CustomNodeSpecification<object, string>;
+
+    if (!node) {
+      console.warn('node not found', props, customNodes);
+      return (
+        <GraphNode
+          id={props.id}
+          specification={{
+            displayName: `${props.data?.kind}`,
+            color: 'var(--grl-color-error)',
+            icon: <WarningOutlined />,
+          }}
+          name={props?.data?.name}
+          isSelected={props.selected}
+          displayError
+          noBodyPadding
+          handleLeft={true}
+          handleRight={true}
+        />
+      );
+    }
+
+    return node.renderNode({ specification: node, ...props });
+  },
+  (prevProps, nextProps) =>
+    prevProps.id === nextProps.id &&
+    prevProps.selected === nextProps.selected &&
+    equal(prevProps.data, nextProps.data),
+);
+
+const baseNodeTypes: Record<string, React.FC<any>> = { ...defaultNodeTypes, customNode: CustomNodeRenderer };
+
 const componentsOpenedKey = 'jdm-components-opened';
 
 export const Graph = forwardRef<GraphRef, GraphProps>(function GraphInner({ reactFlowProOptions, className }, ref) {
@@ -92,13 +127,12 @@ export const Graph = forwardRef<GraphRef, GraphProps>(function GraphInner({ reac
   const graphReferences = useDecisionGraphReferences((s) => s);
   const { onReactFlowInit } = useDecisionGraphListeners(({ onReactFlowInit }) => ({ onReactFlowInit }));
   const { modal } = App.useApp();
-  const { disabled, hasInputNode, components, customNodes, id } = useDecisionGraphState(
-    ({ id, disabled, components, customNodes, decisionGraph }) => ({
+  const { disabled, hasInputNode, components, id } = useDecisionGraphState(
+    ({ id, disabled, components, decisionGraph }) => ({
       id,
       disabled,
       components,
-      customNodes,
-      hasInputNode: (decisionGraph?.nodes || []).some((n) => n.type === NodeKind.Input),
+      hasInputNode: (decisionGraph?.nodes || []).some((n) => INPUT_FAMILY.has(n.type)),
     }),
   );
 
@@ -107,50 +141,8 @@ export const Graph = forwardRef<GraphRef, GraphProps>(function GraphInner({ reac
   graphReferences.graphClipboard.current = useGraphClipboard(reactFlowInstance, reactFlowWrapper);
   graphReferences.reactFlowInstance.current = reactFlowInstance.current;
 
-  const customNodeRenderer = useMemo(() => {
-    return React.memo(
-      (props: MinimalNodeProps) => {
-        const node = customNodes.find((node) => node.kind === props?.data?.kind) as CustomNodeSpecification<
-          object,
-          string
-        >;
-
-        if (!node) {
-          console.warn('node not found', props, customNodes);
-          return (
-            <GraphNode
-              id={props.id}
-              specification={{
-                displayName: `${props.data?.kind}`,
-                color: 'var(--grl-color-error)',
-                icon: <WarningOutlined />,
-              }}
-              name={props?.data?.name}
-              isSelected={props.selected}
-              displayError
-              noBodyPadding
-              handleLeft={true}
-              handleRight={true}
-            />
-          );
-        }
-
-        return node.renderNode({
-          specification: node,
-          ...props,
-        });
-      },
-      (prevProps, nextProps) => {
-        return (
-          prevProps.id === nextProps.id &&
-          prevProps.selected === nextProps.selected &&
-          equal(prevProps.data, nextProps.data)
-        );
-      },
-    );
-  }, [customNodes]);
-
   const nodeTypes = useMemo<Record<string, React.FC<any>>>(() => {
+    if (components.length === 0) return baseNodeTypes;
     return components.reduce(
       (acc, component) => ({
         ...acc,
@@ -165,9 +157,9 @@ export const Graph = forwardRef<GraphRef, GraphProps>(function GraphInner({ reac
           },
         ),
       }),
-      { ...defaultNodeTypes, customNode: customNodeRenderer },
+      { ...defaultNodeTypes, customNode: CustomNodeRenderer },
     );
-  }, [components, customNodeRenderer]);
+  }, [components]);
 
   const addNodeInner = async (type: string, position?: XYPosition, component?: string) => {
     if (!reactFlowWrapper.current || !reactFlowInstance.current) {
@@ -176,16 +168,15 @@ export const Graph = forwardRef<GraphRef, GraphProps>(function GraphInner({ reac
 
     if (!position) {
       const rect = reactFlowWrapper.current.getBoundingClientRect();
-      const rectCenter = {
-        x: rect.width / 2,
-        y: rect.height / 2,
-      };
-
-      position = reactFlowInstance.current.project(rectCenter);
+      position = reactFlowInstance.current.screenToFlowPosition({
+        x: rect.left + rect.width / 2,
+        y: rect.top + rect.height / 2,
+      });
     }
 
+    const { customNodes: currentCustomNodes } = raw.stateStore.getState();
     const customSpecification = match(type)
-      .with('customNode', () => customNodes.find((node) => node.kind === component))
+      .with('customNode', () => currentCustomNodes.find((node) => node.kind === component))
       .otherwise(() => {
         const allSpecifications = [...Object.values(nodeSpecification), ...components];
         return allSpecifications.find((s) => s.type === type);
@@ -219,7 +210,7 @@ export const Graph = forwardRef<GraphRef, GraphProps>(function GraphInner({ reac
 
         return {
           id: crypto.randomUUID(),
-          type: specification.type,
+          type: (specification as any).targetType ?? specification.type,
           position: position as XYPosition,
           ...partialNode,
         } satisfies DecisionNode;
@@ -303,9 +294,9 @@ export const Graph = forwardRef<GraphRef, GraphProps>(function GraphInner({ reac
       return;
     }
 
-    const position = reactFlowInstance.current.project({
-      x: event.clientX - reactFlowBounds.left,
-      y: event.clientY - reactFlowBounds.top,
+    const position = reactFlowInstance.current.screenToFlowPosition({
+      x: event.clientX,
+      y: event.clientY,
     }) as XYPosition;
 
     position.x -= Math.round((elementPosition.x * 226) / 10) * 10;

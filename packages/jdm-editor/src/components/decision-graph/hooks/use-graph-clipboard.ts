@@ -117,12 +117,10 @@ export const useGraphClipboard = (
           }
         } else if (wrapper.current) {
           const rect = wrapper.current.getBoundingClientRect();
-          const rectCenter = {
-            x: rect.width / 2,
-            y: rect.height / 2,
-          };
-
-          const projection = reactFlow.current!.project(rectCenter);
+          const projection = reactFlow.current!.screenToFlowPosition({
+            x: rect.left + rect.width / 2,
+            y: rect.top + rect.height / 2,
+          });
 
           position.x = n.position.x + projection.x - gravityCenter.x / 2;
           position.y = n.position.y + projection.y - gravityCenter.y / 2;

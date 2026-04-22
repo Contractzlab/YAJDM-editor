@@ -37,19 +37,28 @@ export const inputSpecification: NodeSpecification<NodeInputData> = {
   renderTab: ({ id, manager }) => <TabJsonSchema id={id} manager={manager} type={'input'} />,
   renderNode: ({ id, data, selected, specification }) => {
     const graphActions = useDecisionGraphActions();
-    const { disabled } = useDecisionGraphState(({ disabled }) => ({
+    const { disabled, customNodes, nodeKind } = useDecisionGraphState(({ disabled, customNodes, decisionGraph }) => ({
       disabled,
+      customNodes,
+      nodeKind: (decisionGraph?.nodes?.find((n) => n.id === id)?.content as any)?._kind as string | undefined,
     }));
     const { modal } = App.useApp();
+
+    const preset = nodeKind
+      ? customNodes.find((n) => (n as any).isInputNode && n.kind === nodeKind)
+      : undefined;
+    const effectiveSpec = preset
+      ? { ...specification, color: preset.color ?? specification.color, icon: preset.icon ?? specification.icon, displayName: preset.displayName }
+      : specification;
 
     return (
       <GraphNode
         id={id}
-        specification={specification}
+        specification={effectiveSpec}
         name={data.name}
         isSelected={selected}
         handleLeft={false}
-        actions={[
+        actions={preset ? [] : [
           <Button key='edit-table' type='text' onClick={() => graphActions.openTab(id)}>
             Configure
           </Button>,

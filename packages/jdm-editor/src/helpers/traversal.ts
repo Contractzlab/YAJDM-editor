@@ -3,6 +3,7 @@ import { type Edge, type Node, getIncomers, getOutgoers } from 'reactflow';
 
 import type { DecisionGraphType, DecisionNode } from '../components';
 import { mapToGraphEdges, mapToGraphNodes } from '../components/decision-graph/dg-util';
+import { INPUT_FAMILY } from '../components/decision-graph/nodes/specifications/specification-types';
 
 type GraphWalkerCache = {
   digest: ReturnType<typeof decisionGraphPathDigest>;
@@ -49,7 +50,7 @@ function* walkGraph(decisionGraph: DecisionGraphType): Generator<WalkGraphReturn
   const nodes = mapToGraphNodes(decisionGraph.nodes);
   const edges = mapToGraphEdges(decisionGraph.edges);
 
-  const begin = decisionGraph.nodes.find((n) => n.type === 'inputNode');
+  const begin = decisionGraph.nodes.find((n) => INPUT_FAMILY.has(n.type));
   const beginRf = nodes.find((n) => n.id === begin?.id);
   if (!begin || !beginRf) {
     return;
