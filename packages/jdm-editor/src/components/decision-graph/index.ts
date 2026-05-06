@@ -13,6 +13,7 @@ export {
   type DecisionNodeProps as GraphDecisionNodeProps,
 } from './nodes/decision-node';
 export { GraphSimulator, type GraphSimulatorProps } from './simulator/dg-simulator';
+export { SimulatorResponsePanel, type SimulatorResponsePanelProps } from './simulator/simulator-response-panel';
 export { SimulatorEditor } from './simulator/simulator-editor';
 export {
   useDecisionGraphState,

@@ -1,24 +1,16 @@
-import { CheckCircleTwoTone, ClearOutlined, CloseCircleTwoTone, CloseOutlined } from '@ant-design/icons';
-import { Button, Spin, Tabs, Tooltip, Typography } from 'antd';
+import { CheckCircleTwoTone, ClearOutlined, CloseCircleTwoTone } from '@ant-design/icons';
+import { Button, Spin, Tooltip, Typography } from 'antd';
 import clsx from 'clsx';
-import json5 from 'json5';
 import React, { useMemo, useState } from 'react';
 import { Panel, PanelGroup, PanelResizeHandle } from 'react-resizable-panels';
 import { P, match } from 'ts-pattern';
 
-import '../../../helpers/monaco';
 import { usePersistentState } from '../../../helpers/use-persistent-state';
 import { useDecisionGraphRaw, useDecisionGraphState } from '../context/dg-store.context';
 import { NodeKind } from '../nodes/specifications/specification-types';
 import type { SimulationTrace } from './simulation.types';
-import { SimulatorEditor } from './simulator-editor';
 import { SimulatorRequestPanel, type SimulatorRequestPanelProps } from './simulator-request-panel';
-
-enum SimulationSegment {
-  Output = 'Output',
-  Input = 'Input',
-  Trace = 'Trace',
-}
+import { SimulatorResponsePanel, type SimulatorResponsePanelProps } from './simulator-response-panel';
 
 export type GraphSimulatorProps = {
   onClear?: () => void;
@@ -27,6 +19,7 @@ export type GraphSimulatorProps = {
   onChange?: SimulatorRequestPanelProps['onChange'];
   onRun?: SimulatorRequestPanelProps['onRun'];
   leftPanel?: React.FC<SimulatorRequestPanelProps>;
+  rightPanel?: React.FC<SimulatorResponsePanelProps>;
 };
 
 export const GraphSimulator: React.FC<GraphSimulatorProps> = ({
@@ -36,9 +29,9 @@ export const GraphSimulator: React.FC<GraphSimulatorProps> = ({
   onClear,
   loading = false,
   leftPanel: LeftPanel = SimulatorRequestPanel,
+  rightPanel: RightPanel = SimulatorResponsePanel,
 }) => {
   const [search, setSearch] = usePersistentState<string>('simulation.search', '');
-  const [segment, setSegment] = usePersistentState<SimulationSegment>('simulation.segment', SimulationSegment.Output);
 
   const { viewConfig } = useDecisionGraphState((state) => ({
     viewConfig: state.viewConfig,
@@ -175,61 +168,14 @@ export const GraphSimulator: React.FC<GraphSimulatorProps> = ({
       </Panel>
       <PanelResizeHandle />
       <Panel minSize={30} defaultSize={50} className={'grl-dg__simulator__section grl-dg__simulator__response'}>
-        <div className={'grl-dg__simulator__section__bar grl-dg__simulator__section__bar--response'}>
-          <Tabs
-            rootClassName='grl-inline-tabs'
-            size='small'
-            style={{ width: '100%' }}
-            onChange={(tab) => setSegment(tab as SimulationSegment)}
-            items={Object.values(SimulationSegment).map((s) => ({
-              key: s,
-              label: s,
-            }))}
-            tabBarExtraContent={
-              <Tooltip title='Close panel'>
-                <Button
-                  type='text'
-                  icon={<CloseOutlined style={{ fontSize: 12 }} />}
-                  onClick={() => actions.setActivePanel(undefined)}
-                />
-              </Tooltip>
-            }
-          />
-        </div>
-        <div className={'grl-dg__simulator__section__content'}>
-          <SimulatorEditor
-            readOnly
-            value={match(simulate)
-              .with({ result: P._ }, ({ result }) =>
-                match(selectedNode)
-                  .with('graph', () =>
-                    displaySegment(
-                      {
-                        traceData: result?.trace,
-                        output: result?.result,
-                      },
-                      segment ?? SimulationSegment.Output,
-                    ),
-                  )
-                  .otherwise(() => displaySegment(result?.trace[selectedNode], segment ?? SimulationSegment.Output)),
-              )
-              .otherwise(() => '')}
-          />
-        </div>
+        <RightPanel
+          simulate={simulate}
+          selectedNode={selectedNode}
+          onClose={() => actions.setActivePanel(undefined)}
+        />
       </Panel>
     </PanelGroup>
   );
-};
-
-const displaySegment = (data: unknown, segment: SimulationSegment) => {
-  const jsonData = match([segment, data])
-    .with([SimulationSegment.Output, { output: P._ }], ([, { output }]) => output)
-    .with([SimulationSegment.Input, { input: P._ }], ([, { input }]) => input)
-    .with([SimulationSegment.Trace, { trace: P._ }], ([, { trace }]) => trace)
-    .with([SimulationSegment.Trace, { traceData: P._ }], ([, { traceData }]) => traceData)
-    .otherwise(() => ({}));
-
-  return json5.stringify(jsonData, undefined, 2);
 };
 
 const StatusIcon: React.FC<{ status: 'success' | 'error' | 'not-run' }> = ({ status }) => {

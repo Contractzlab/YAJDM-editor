@@ -202,3 +202,46 @@ const nodeTypes = useMemo(() => {
 ```
 
 The created node is saved as `type: "inputNode"` with `content.schema` set to your schema and `content._kind` set to `kind`. The Zen engine receives a standard input node and needs no changes.
+
+---
+
+## 4. Right Panel Extension Point (`rightPanel` prop)
+
+### Problem
+The simulator's right panel (output/response area) was hardcoded to render a Monaco JSON editor with Output/Input/Trace tabs. Host apps had no way to customise the output display — e.g. to show a business-friendly key-value view instead of raw JSON.
+
+### Solution — `rightPanel?: React.FC<SimulatorResponsePanelProps>` on `GraphSimulatorProps`
+
+Mirrors the existing `leftPanel` pattern. The current right panel code was extracted into a default `SimulatorResponsePanel` component. Host apps can override it by passing a custom component.
+
+### Changed files
+
+#### `simulator/simulator-response-panel.tsx` (NEW)
+Extracted from `dg-simulator.tsx`. Contains:
+- `SimulatorResponsePanelProps` type — `{ simulate?, selectedNode, onClose? }`
+- `SimulatorResponsePanel` default component — the original Output/Input/Trace tabs + Monaco editor
+- `SimulationSegment` enum and `displaySegment()` helper (moved here from dg-simulator)
+
+#### `simulator/dg-simulator.tsx`
+- Added `rightPanel?: React.FC<SimulatorResponsePanelProps>` to `GraphSimulatorProps`
+- Destructured with default: `rightPanel: RightPanel = SimulatorResponsePanel`
+- Replaced inlined right panel JSX with `<RightPanel simulate={...} selectedNode={...} onClose={...} />`
+- Removed `SimulationSegment`, `displaySegment`, and related imports (moved to response panel)
+
+#### `index.ts` (barrel)
+Added export: `SimulatorResponsePanel`, `SimulatorResponsePanelProps`
+
+### How to override the right panel (app side, no fork rebuild)
+
+```tsx
+import type { SimulatorResponsePanelProps } from '@gorules/jdm-editor';
+
+const MyOutputPanel: React.FC<SimulatorResponsePanelProps> = ({ simulate, selectedNode, onClose }) => {
+  // Custom rendering — key-value tree, charts, whatever
+  return <div>...</div>;
+};
+
+<GraphSimulator rightPanel={MyOutputPanel} />
+```
+
+Pass `undefined` to use the default Monaco-based panel.
