@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# 0.9.0 (2026-05-18)
+
+### Bug Fixes
+
+- codemirror keymap ([#91](https://github.com/lezer-parser/json/issues/91)) ([2f05c46](https://github.com/lezer-parser/json/commit/2f05c467d6afe130becf927ed2bf948178972692))
+
+### Features
+
+- assignment ([#185](https://github.com/lezer-parser/json/issues/185)) ([af871f7](https://github.com/lezer-parser/json/commit/af871f7b048c65b54af4eea664090566b1827ee2))
+- code editor ([#34](https://github.com/lezer-parser/json/issues/34)) ([2964e8e](https://github.com/lezer-parser/json/commit/2964e8ed20d422c65d8eefdad92d08eae2665913))
+- date v2 ([#168](https://github.com/lezer-parser/json/issues/168)) ([8c0d3a6](https://github.com/lezer-parser/json/commit/8c0d3a6f9b4fe7f55ddd17096d5d32843d6fe9e4))
+- function scope alias ([#221](https://github.com/lezer-parser/json/issues/221)) ([a022647](https://github.com/lezer-parser/json/commit/a022647cf0b97fb18acf1294acb6cc76c640a708))
+- intellisense ([#86](https://github.com/lezer-parser/json/issues/86)) ([63f939a](https://github.com/lezer-parser/json/commit/63f939a1a06bdeef1f647bcccc9b7a18c2e956c1))
+- template string ([#75](https://github.com/lezer-parser/json/issues/75)) ([89dacc2](https://github.com/lezer-parser/json/commit/89dacc25d2d647260a059a1e57aefdb9f905d20d))
+- update function definitions p1 ([#63](https://github.com/lezer-parser/json/issues/63)) ([be2a940](https://github.com/lezer-parser/json/commit/be2a940f474702746b8331077a42932f34139d03))
+
 ## [0.8.1](https://github.com/lezer-parser/json/compare/@ahmedbrahimmekni/lezer-zen@0.8.0...@ahmedbrahimmekni/lezer-zen@0.8.1) (2026-01-19)
 
 ### Features
