@@ -1,4 +1,4 @@
-import { Variable, VariableType } from '@gorules/zen-engine-wasm';
+import { Variable, VariableType } from '@ahmedbrahimmekni/zen-engine-wasm';
 import equal from 'fast-deep-equal/es6/react';
 import type React from 'react';
 import { useEffect, useRef } from 'react';

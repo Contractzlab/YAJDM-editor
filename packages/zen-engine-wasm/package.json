@@ -1,5 +1,5 @@
 {
-  "name": "@gorules/zen-engine-wasm",
+  "name": "@ahmedbrahimmekni/zen-engine-wasm",
   "version": "0.23.1",
   "description": "ZEN Engine WASM",
   "type": "module",

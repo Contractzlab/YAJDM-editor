@@ -1,5 +1,5 @@
 import type { Diagnostic } from '@codemirror/lint';
-import { VariableType, validateExpression, validateUnaryExpression } from '@gorules/zen-engine-wasm';
+import { VariableType, validateExpression, validateUnaryExpression } from '@ahmedbrahimmekni/zen-engine-wasm';
 import { P, match } from 'ts-pattern';
 
 import { codemirror } from '../../../helpers/codemirror';

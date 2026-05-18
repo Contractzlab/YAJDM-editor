@@ -1,4 +1,4 @@
-import { type Variable } from '@gorules/zen-engine-wasm';
+import { type Variable } from '@ahmedbrahimmekni/zen-engine-wasm';
 import { Typography } from 'antd';
 import stringifyPretty from 'json-stringify-pretty-compact';
 import { BugIcon } from 'lucide-react';

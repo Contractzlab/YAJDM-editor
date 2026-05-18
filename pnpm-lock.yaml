@@ -72,6 +72,15 @@ importers:
 
   packages/jdm-editor:
     dependencies:
+      '@ahmedbrahimmekni/lezer-zen':
+        specifier: workspace:*
+        version: link:../lezer-zen
+      '@ahmedbrahimmekni/lezer-zen-template':
+        specifier: workspace:*
+        version: link:../lezer-zen-template
+      '@ahmedbrahimmekni/zen-engine-wasm':
+        specifier: workspace:*
+        version: link:../zen-engine-wasm
       '@ant-design/icons':
         specifier: 6.0.0
         version: 6.0.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -93,15 +102,6 @@ importers:
       '@codemirror/view':
         specifier: ^6.36.5
         version: 6.36.5
-      '@gorules/lezer-zen':
-        specifier: workspace:*
-        version: link:../lezer-zen
-      '@gorules/lezer-zen-template':
-        specifier: workspace:*
-        version: link:../lezer-zen-template
-      '@gorules/zen-engine-wasm':
-        specifier: workspace:*
-        version: link:../zen-engine-wasm
       '@lezer/common':
         specifier: ^1.2.3
         version: 1.2.3

@@ -1,4 +1,4 @@
-import { type VariableType } from '@gorules/zen-engine-wasm';
+import { type VariableType } from '@ahmedbrahimmekni/zen-engine-wasm';
 import type { Monaco } from '@monaco-editor/react';
 import equal from 'fast-deep-equal/es6/react';
 import type { WritableDraft } from 'immer';

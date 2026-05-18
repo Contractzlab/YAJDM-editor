@@ -1,5 +1,5 @@
 import { PlusCircleOutlined } from '@ant-design/icons';
-import type { VariableType } from '@gorules/zen-engine-wasm';
+import type { VariableType } from '@ahmedbrahimmekni/zen-engine-wasm';
 import { Button, Typography } from 'antd';
 import clsx from 'clsx';
 import equal from 'fast-deep-equal/es6/react';

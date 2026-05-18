@@ -1,6 +1,6 @@
 import type { Completion } from '@codemirror/autocomplete';
 import { StateEffect, StateField } from '@codemirror/state';
-import type { VariableType } from '@gorules/zen-engine-wasm';
+import type { VariableType } from '@ahmedbrahimmekni/zen-engine-wasm';
 import { P, match } from 'ts-pattern';
 
 import { applyCompletion } from './zen';

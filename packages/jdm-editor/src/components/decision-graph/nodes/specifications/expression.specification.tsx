@@ -1,5 +1,5 @@
 import { ArrowRightOutlined, SyncOutlined } from '@ant-design/icons';
-import { VariableType } from '@gorules/zen-engine-wasm';
+import { VariableType } from '@ahmedbrahimmekni/zen-engine-wasm';
 import { Button, Form } from 'antd';
 import equal from 'fast-deep-equal/es6/react';
 import { produce } from 'immer';

@@ -1,5 +1,5 @@
 import { syntaxTree } from '@codemirror/language';
-import { Variable, createVariableType, generateAst, generateAstUnary } from '@gorules/zen-engine-wasm';
+import { Variable, createVariableType, generateAst, generateAstUnary } from '@ahmedbrahimmekni/zen-engine-wasm';
 import type { SyntaxNodeRef } from '@lezer/common';
 import type { Meta, StoryObj } from '@storybook/react';
 import { fn } from '@storybook/test';

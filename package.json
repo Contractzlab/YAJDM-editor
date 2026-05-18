@@ -1,5 +1,5 @@
 {
-  "name": "@gorules/jdm-monorepo",
+  "name": "@ahmedbrahimmekni/jdm-monorepo",
   "private": true,
   "publishConfig": {
   "access": "public"

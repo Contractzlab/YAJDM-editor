@@ -1,4 +1,4 @@
-import { type VariableType } from '@gorules/zen-engine-wasm';
+import { type VariableType } from '@ahmedbrahimmekni/zen-engine-wasm';
 import type { DragDropManager } from 'dnd-core';
 import type React from 'react';
 import type { NodeProps } from 'reactflow';

@@ -22,7 +22,7 @@ jobs:
 
       - name: Build storybook
         run: |
-          pnpm lerna run --scope @gorules/jdm-editor build:storybook
+          pnpm lerna run --scope @ahmedbrahimmekni/jdm-editor build:storybook
           touch packages/jdm-editor/docs/.nojekyll
 
       - name: Deploy

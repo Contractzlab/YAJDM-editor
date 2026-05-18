@@ -1,5 +1,5 @@
 import { ArrowRightOutlined, DeleteOutlined, DownOutlined } from '@ant-design/icons';
-import type { VariableType } from '@gorules/zen-engine-wasm';
+import type { VariableType } from '@ahmedbrahimmekni/zen-engine-wasm';
 import { Button, Dropdown, Popconfirm, Typography } from 'antd';
 import clsx from 'clsx';
 import { produce } from 'immer';

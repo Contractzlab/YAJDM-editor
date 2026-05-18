@@ -1,7 +1,7 @@
 import { syntaxTree } from '@codemirror/language';
 import type { Diagnostic } from '@codemirror/lint';
 import { EditorState } from '@codemirror/state';
-import { createVariableType } from '@gorules/zen-engine-wasm';
+import { createVariableType } from '@ahmedbrahimmekni/zen-engine-wasm';
 import { highlightCode as lzHighlightCode } from '@lezer/highlight';
 import { theme } from 'antd';
 import clsx from 'clsx';

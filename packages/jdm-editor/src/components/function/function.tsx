@@ -1,4 +1,4 @@
-import { createVariableType } from '@gorules/zen-engine-wasm';
+import { createVariableType } from '@ahmedbrahimmekni/zen-engine-wasm';
 import { DiffEditor, Editor, type Monaco, useMonaco } from '@monaco-editor/react';
 import { Spin, theme } from 'antd';
 import { MarkerSeverity, type editor } from 'monaco-editor';

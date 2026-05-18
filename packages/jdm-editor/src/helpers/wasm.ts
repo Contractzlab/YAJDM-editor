@@ -1,4 +1,4 @@
-import initWasm, { isReady } from '@gorules/zen-engine-wasm';
+import initWasm, { isReady } from '@ahmedbrahimmekni/zen-engine-wasm';
 import { useEffect, useState } from 'react';
 
 let wasmAvailable = false;

@@ -1,4 +1,4 @@
-import { VariableType } from '@gorules/zen-engine-wasm';
+import { VariableType } from '@ahmedbrahimmekni/zen-engine-wasm';
 import equal from 'fast-deep-equal/es6/react';
 import { produce } from 'immer';
 import { useEffect } from 'react';
@@ -245,7 +245,7 @@ const inferTypesNeedsUpdate = (
   return nodesNeedUpdate.some((up) => up);
 };
 
-declare module '@gorules/zen-engine-wasm' {
+declare module '@ahmedbrahimmekni/zen-engine-wasm' {
   interface VariableType {
     __hash: string;
   }

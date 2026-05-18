@@ -1,4 +1,4 @@
-import type { VariableType, VariableTypeJson } from '@gorules/zen-engine-wasm';
+import type { VariableType, VariableTypeJson } from '@ahmedbrahimmekni/zen-engine-wasm';
 import { P, match } from 'ts-pattern';
 
 export const variableTypeToTypescript = (variableType: VariableType) => {

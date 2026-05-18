@@ -1,5 +1,5 @@
 import { InfoCircleOutlined, PlayCircleOutlined } from '@ant-design/icons';
-import { VariableType } from '@gorules/zen-engine-wasm';
+import { VariableType } from '@ahmedbrahimmekni/zen-engine-wasm';
 import { Button, Tooltip, Typography, notification } from 'antd';
 import json5 from 'json5';
 import React, { useEffect, useState } from 'react';

@@ -1,4 +1,4 @@
-import { VariableType } from '@gorules/zen-engine-wasm';
+import { VariableType } from '@ahmedbrahimmekni/zen-engine-wasm';
 import { useMemo } from 'react';
 
 import {

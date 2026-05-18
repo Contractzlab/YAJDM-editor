@@ -1,5 +1,5 @@
 import { DownOutlined } from '@ant-design/icons';
-import { type VariableType } from '@gorules/zen-engine-wasm';
+import { type VariableType } from '@ahmedbrahimmekni/zen-engine-wasm';
 import { Button, Checkbox, Form, Typography, theme } from 'antd';
 import type { DragDropManager } from 'dnd-core';
 import React, { useState } from 'react';

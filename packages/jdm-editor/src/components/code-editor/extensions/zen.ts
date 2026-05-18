@@ -10,8 +10,8 @@ import { history, historyKeymap, insertNewlineAndIndent } from '@codemirror/comm
 import { HighlightStyle, LRLanguage, LanguageSupport, syntaxTree } from '@codemirror/language';
 import type { EditorView } from '@codemirror/view';
 import { hoverTooltip, keymap } from '@codemirror/view';
-import { parser as zenParser } from '@gorules/lezer-zen';
-import { parser as zenTemplateParser } from '@gorules/lezer-zen-template';
+import { parser as zenParser } from '@ahmedbrahimmekni/lezer-zen';
+import { parser as zenTemplateParser } from '@ahmedbrahimmekni/lezer-zen-template';
 import { NodeProp, type SyntaxNode, parseMixed } from '@lezer/common';
 import { tags as t } from '@lezer/highlight';
 import { P, match } from 'ts-pattern';

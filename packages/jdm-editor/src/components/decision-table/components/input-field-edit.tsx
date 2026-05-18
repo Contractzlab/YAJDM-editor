@@ -1,4 +1,4 @@
-import { type Variable } from '@gorules/zen-engine-wasm';
+import { type Variable } from '@ahmedbrahimmekni/zen-engine-wasm';
 import type { InputRef } from 'antd';
 import { Checkbox, Input, Select, Typography } from 'antd';
 import React, { useEffect, useRef, useState } from 'react';

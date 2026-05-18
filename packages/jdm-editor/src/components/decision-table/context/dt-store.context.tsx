@@ -1,4 +1,4 @@
-import type { Variable, VariableType } from '@gorules/zen-engine-wasm';
+import type { Variable, VariableType } from '@ahmedbrahimmekni/zen-engine-wasm';
 import equal from 'fast-deep-equal/es6/react';
 import { produce } from 'immer';
 import React, { useMemo } from 'react';

@@ -1,7 +1,7 @@
 import { bracketMatching, syntaxHighlighting } from '@codemirror/language';
 import { Compartment, EditorState, type Extension, Text } from '@codemirror/state';
 import { EditorView, placeholder as placeholderExt } from '@codemirror/view';
-import { createVariableType } from '@gorules/zen-engine-wasm';
+import { createVariableType } from '@ahmedbrahimmekni/zen-engine-wasm';
 import { theme } from 'antd';
 import clsx from 'clsx';
 import { clamp } from 'lodash';

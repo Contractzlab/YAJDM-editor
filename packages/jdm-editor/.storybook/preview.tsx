@@ -1,4 +1,4 @@
-import * as ZenEngineWasm from '@gorules/zen-engine-wasm';
+import * as ZenEngineWasm from '@ahmedbrahimmekni/zen-engine-wasm';
 import type { Preview } from '@storybook/react';
 import * as React from 'react';
 import { useDarkMode } from 'storybook-dark-mode';

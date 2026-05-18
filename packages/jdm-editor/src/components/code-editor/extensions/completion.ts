@@ -1,4 +1,4 @@
-import { getCompletions as getCompletionsWasm } from '@gorules/zen-engine-wasm';
+import { getCompletions as getCompletionsWasm } from '@ahmedbrahimmekni/zen-engine-wasm';
 
 import { isWasmAvailable } from '../../../helpers/wasm';
 

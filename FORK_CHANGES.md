@@ -1,4 +1,4 @@
-# Fork Changes — `@gorules/jdm-editor`
+# Fork Changes — `@ahmedbrahimmekni/jdm-editor`
 
 This document describes every change made to the forked `jdm-editor` library relative to the upstream package. All changes are inside `packages/jdm-editor/packages/jdm-editor/src/`.
 
@@ -234,7 +234,7 @@ Added export: `SimulatorResponsePanel`, `SimulatorResponsePanelProps`
 ### How to override the right panel (app side, no fork rebuild)
 
 ```tsx
-import type { SimulatorResponsePanelProps } from '@gorules/jdm-editor';
+import type { SimulatorResponsePanelProps } from '@ahmedbrahimmekni/jdm-editor';
 
 const MyOutputPanel: React.FC<SimulatorResponsePanelProps> = ({ simulate, selectedNode, onClose }) => {
   // Custom rendering — key-value tree, charts, whatever
