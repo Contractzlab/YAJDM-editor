@@ -1,6 +1,10 @@
 {
   "name": "@gorules/jdm-monorepo",
   "private": true,
+  "publishConfig": {
+  "access": "public"
+  },
+
   "scripts": {
     "lerna": "lerna",
     "build": "lerna run build",
@@ -41,5 +45,9 @@
     "overrides": {
       "axios@<0.30.0": ">=0.30.0"
     }
+  },
+  "dependencies": {
+    "rimraf": "^6.1.3"
   }
+  
 }
